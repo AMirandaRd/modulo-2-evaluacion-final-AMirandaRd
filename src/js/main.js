@@ -5,6 +5,11 @@ const searchButton = document.querySelector('.js-button');
 const listOfShows = document.querySelector('.js-result');
 const formOfShows = document.querySelector('.js-form');
 let series = [];
+let favourites = [];
+
+function preventDefault(event) {
+  event.preventDefault();
+}
 
 function handleClick() {
   const inputuservalue = inputUser.value;
@@ -55,23 +60,47 @@ function handleEachSerie(event) {
   const selectedShow = event.currentTarget;
   selectedShow.classList.toggle('colorVIP');
   const myFavouriteShow = event.currentTarget.id;
-  const objectSelected = series.find((serie) => {
+  const serieHighlighted = series.find((serie) => {
     return serie.show.id === parseInt(myFavouriteShow);
   });
   //NOTA SUPER IMPORTANTE: series.find({serie =>}) nos da EL OBJETO completo a través de la búsqueda que pedimos (en este caso buscará el objeto con el id de la serie que coincida o sea igual al id de la serie seleccionada por el usuario, pero find nos devuelve EL OBJETO COMPLETO )
 
-  vipShowList.push(objectSelected);
-  console.log(vipShowList);
-  //addFavouriteShow();
-}
-//Tenemos que meter las series seleccionadas en un array para tener nuestra lista de favoritos.
-//creamos un nuevo array
-let vipShowList = [];
+  //creamos un nuevo array donde meteremos los favoritos(la ponemos como global)
 
-function preventDefault(event) {
-  event.preventDefault();
+  //
+  const favouriteIsFavourite = favourites.findIndex((favourite) => {
+    return favourite.id === myFavouriteShow;
+  });
+  console.log(favouriteIsFavourite);
+  if (favouriteIsFavourite === -1) {
+    favourites.push(serieHighlighted);
+  }else{
+    favourites.splice(favouriteIsFavourite,1);
+  }
+  //console.log(favourites);
+  addFavouritesInVipSection();
 }
+
+//Ahora vamos a pintar las series favoritas en otra sección
+
+
+function addFavouritesInVipSection() {
+  let printVip=`<h3> Mis series favoritas </h3>`;
+  for (const eachItem of favourites) {
+    printVip += `<li class="js-listitem eachitemlist" id="${eachItem.show.id}">`;
+    printVip += `<h4>${eachItem.show.name}</h4>`;
+    if (eachItem.show.image === null) {
+      printVip += `<img src="./assets/images/defaultimage.png" class="" alt="${eachItem.show.name} cover image">`;
+    } else {
+      printVip += `<img src="${eachItem.show.image.medium}" class="" alt="${eachItem.show.name} cover image">`;
+    }
+    printVip += `</li>`;
+
+  }
+  const vipSection = document.querySelector('.js-favouriteshows');
+  vipSection.innerHTML= printVip;
+}
+
 
 searchButton.addEventListener('click', handleClick);
 formOfShows.addEventListener('submit', preventDefault);
-//const favouriteShowsSection=document.querySelector('js-favouriteshow');
