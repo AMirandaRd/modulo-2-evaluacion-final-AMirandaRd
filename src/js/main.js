@@ -25,10 +25,10 @@ function handleClick() {
 function displayList() {
   //hay que "limpiar" el contenido de la página cada vez que se recarge (o hagamos una nueva búsqueda)
   listOfShows.innerHTML = '';
-  let printList = '';
+  let printList = `<h2> Resultados de la busqueda </h2>`;
   //creamos un bucle para sacar la información que queremos de cada elemento del array (en este caso un titulo y una imagen)
   for (const eachData of series) {
-    printList += `<li class="js-listitem" id="${eachData.show.id}">`;
+    printList += `<li class="js-listitem eachitemlist" id="${eachData.show.id}">`;
     printList += `<h3>${eachData.show.name}</h3>`;
 
     if (eachData.show.image === null) {
@@ -85,7 +85,7 @@ function handleEachSerie(event) {
 
 
 function addFavouritesInVipSection() {
-  let printVip=`<h3> Mis series favoritas </h3>`;
+  let printVip=`<h2> Mis series favoritas </h2>`;
   for (const eachItem of favourites) {
     printVip += `<li class="js-listitem eachitemlist" id="${eachItem.show.id}">`;
     printVip += `<h4>${eachItem.show.name}</h4>`;

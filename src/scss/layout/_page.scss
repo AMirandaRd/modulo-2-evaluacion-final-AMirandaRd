@@ -1,14 +1,52 @@
-.colorVIP {border: 3px solid palevioletred;
-max-width: fit-content;}
-.container{
-    width: 100vw;
-    display: flex;
-    justify-content: space-evenly;
-    flex-direction: row;
-
+.to-apply-all{
+    background: linear-gradient(to right, blue, pink);
 }
 
-.vipsection{
-    order: (-1);
+.colorVIP {
+  border: 3px solid palevioletred;
+  border-style: dotted;
+  max-width: fit-content;
+}
+.container {
+  width: 100vw;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+}
+
+.vipsection {
+  order: (-1);
+  text-align: center;
+}
+
+.searcher {
+  display: flex;
+  flex-direction: raw;
+  margin: 20px 0 30px 20px;
+  &__input {
+    height: 28px;
+    width: 30em;
+    margin-right: 20px;
+    border: pink solid 2px;
+    &--button {
+      width: 10em;
+      height: 28px;
+      box-sizing: border-box;
+      background-color: pink;
+      border: none;
+      box-shadow: 2px 2px 2px 2px pink;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1em;
+      padding-top: 2px;
+    }
+  }
+  &__tittle {
     text-align: center;
+    margin: 25px;
+    text-transform: uppercase;
+  }
+  &__main {
+    height: 100vh;
+    font-family: $font-main;
+  }
 }
