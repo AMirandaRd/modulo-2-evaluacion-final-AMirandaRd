@@ -25,7 +25,7 @@ function handleClick() {
 function displayList() {
   //hay que "limpiar" el contenido de la página cada vez que se recarge (o hagamos una nueva búsqueda)
   listOfShows.innerHTML = '';
-  let printList = `<h2> Resultados de la busqueda </h2>`;
+  let printList = `<h2 class="subtitle"> Resultados de la busqueda </h2>`;
   //creamos un bucle para sacar la información que queremos de cada elemento del array (en este caso un titulo y una imagen)
   for (const eachData of series) {
     printList += `<li class="js-listitem eachitemlist" id="${eachData.show.id}">`;
@@ -63,13 +63,17 @@ function handleEachSerie(event) {
   const serieHighlighted = series.find((serie) => {
     return serie.show.id === parseInt(myFavouriteShow);
   });
-  //NOTA SUPER IMPORTANTE: series.find({serie =>}) nos da EL OBJETO completo a través de la búsqueda que pedimos (en este caso buscará el objeto con el id de la serie que coincida o sea igual al id de la serie seleccionada por el usuario, pero find nos devuelve EL OBJETO COMPLETO )
-
   //creamos un nuevo array donde meteremos los favoritos(la ponemos como global)
+  //NOTA SUPER IMPORTANTE: .find devuelve el primer objeto que encuentra que cumpla esa condición (en este caso que el id sea igual al id del elemento clickado)el id al ser unico, no tiene que seguir buscando tras encontrar el primero.(serie.show.id===parseInt(myFavouriteShow, que contiene el valor del elemento clickado))
+  
+  //console.log(myFavouriteShow) <----nos devuelve el id del objeto clickado
+  
+  //console.log(serieHighlighted)  <-----nos devuelve el objeto clickado
+  
 
   //
   const favouriteIsFavourite = favourites.findIndex((favourite) => {
-    return favourite.id === myFavouriteShow;
+    return favourite.show.id === parseInt(myFavouriteShow);
   });
   console.log(favouriteIsFavourite);
   if (favouriteIsFavourite === -1) {
