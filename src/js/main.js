@@ -12,6 +12,10 @@ function preventDefault(event) {
 
 function handleClick(event) {
   const inputuservalue = inputUser.value;
+
+if (inputuservalue.length===0){
+  listOfShows.innerHTML=`<p class="alert">El campo enviado está vacio</p>`
+}else{
   fetch('//api.tvmaze.com/search/shows?q=' + inputuservalue)
     .then((response) => response.json())
     .then((data) => {
@@ -19,6 +23,7 @@ function handleClick(event) {
       series = data;
       displayList();
     });
+  }
 }
 //función que depliega la lista de series
 function displayList() {
@@ -100,25 +105,28 @@ function addFavouritesInVipSection() {
       printVip += `<img src="${eachItem.show.image.medium}" class="" alt="${eachItem.show.name} cover image">`;
     }
     printVip += `</li>`;
-
-  }
+    favouriteIsFavourite(eachItem);
+  } 
   const favouritesSection = document.querySelector('.js-favouritesection');
   favouritesSection.innerHTML= printVip;
-  favouriteIsFavourite();
+  
 }
 
 //Par guardar esa lista de favoritos en el local (y que no se borren los favoritos al recargar) hay que: 1) Checkear que la serie (el li) es un favorito o no. 2) Añadirle una clase para diferenciarlos del resto de series NO favoritas 
  function favouriteIsFavourite(eachData){
   const favouriteFound= favourites.find((eachItem) =>{
+    
     return eachItem.show.id === eachData.show.id;
   })
+ 
   if (favouriteFound===undefined){
     return false
+    
   }else{
     return true
   }
-   console.log(favouriteFound)
-}  
  
+}  
+
 searchButton.addEventListener('click', handleClick);
 formOfShows.addEventListener('submit', preventDefault);
