@@ -8,21 +8,21 @@ let series = [];
 let favourites = [];
 function preventDefault(event) {
   event.preventDefault();
-} 
+}
 
-function handleClick(event) {
+function handleClick() {
   const inputuservalue = inputUser.value;
-
-if (inputuservalue.length===0){
-  listOfShows.innerHTML=`<p class="alert">El campo enviado está vacio</p>`
-}else{
-  fetch('//api.tvmaze.com/search/shows?q=' + inputuservalue)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      series = data;
-      displayList();
-    });
+  if (inputuservalue.length === 0) {
+    listOfShows.innerHTML = `<p class="alert">El campo enviado está vacio</p>`;
+  } else {
+    fetch('//api.tvmaze.com/search/shows?q=' + inputuservalue)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        series = data;
+        displayList();
+        setInLocalStorage();
+      });
   }
 }
 //función que depliega la lista de series
@@ -48,7 +48,6 @@ function displayList() {
   listOfShows.innerHTML = printList;
   //llamamos al siguiente paso
   handleListItem();
-  
 }
 
 //Identificamos cada item clickado
@@ -70,63 +69,88 @@ function handleEachSerie(event) {
   });
   //creamos un nuevo array donde meteremos los favoritos(la ponemos como global)
   //NOTA SUPER IMPORTANTE: .find devuelve el primer objeto que encuentra que cumpla esa condición (en este caso que el id sea igual al id del elemento clickado)el id al ser unico, no tiene que seguir buscando tras encontrar el primero.(serie.show.id===parseInt(myFavouriteShow, que contiene el valor del elemento clickado))
-  
+
   //console.log(myFavouriteShow) <----nos devuelve el id del objeto clickado
-  
+
   //console.log(serieHighlighted)  <-----nos devuelve el objeto clickado
-  
 
   //
-  const favouriteIsInVipSection= favourites.findIndex((eachItem) => {
+  const favouriteIsInVipSection = favourites.findIndex((eachItem) => {
     return eachItem.show.id === parseInt(myFavouriteShow);
   });
   console.log(favouriteIsInVipSection);
   if (favouriteIsInVipSection === -1) {
     favourites.push(serieHighlighted);
-  }else{
-    favourites.splice(favouriteIsInVipSection,1);
+  } else {
+    favourites.splice(favouriteIsInVipSection, 1);
   }
   console.log(favourites);
   addFavouritesInVipSection();
- 
 }
 
 //Ahora vamos a pintar las series favoritas en otra sección
 
-
 function addFavouritesInVipSection() {
-  let printVip=`<h2> Mis series favoritas </h2>`;
+  let vipClass = '';
+  let printVip = `<h2> Mis series favoritas </h2>`;
   for (const eachItem of favourites) {
-    printVip += `<li class="js-listitem eachitemlist" id="${eachItem.show.id}">`;
-    printVip += `<h4>${eachItem.show.name}</h4>`;
-    if (eachItem.show.image === null) {
-      printVip += `<img src="./assets/images/defaultimage.png" class="" alt="${eachItem.show.name} cover image">`;
+    const isFavourite = favouriteIsFavourite(eachItem);
+    if (isFavourite) {
+      vipClass = 'colorVIP__VIPsection';
     } else {
-      printVip += `<img src="${eachItem.show.image.medium}" class="" alt="${eachItem.show.name} cover image">`;
+      vipClass = '';
+    }
+    printVip += `<li class="js-listitem eachitemlist ${vipClass}" id="${eachItem.show.id}">`;
+    printVip += `<h3>${eachItem.show.name}</h3>`;
+    if (eachItem.show.image === null) {
+      printVip += `<img src="./assets/images/defaultimage.png" class="cover" alt="${eachItem.show.name} cover image">`;
+    } else {
+      printVip += `<img src="${eachItem.show.image.medium}" class="cover" alt="${eachItem.show.name} cover image">`;
     }
     printVip += `</li>`;
     favouriteIsFavourite(eachItem);
-  } 
+  }
   const favouritesSection = document.querySelector('.js-favouritesection');
-  favouritesSection.innerHTML= printVip;
-  
+  favouritesSection.innerHTML = printVip;
 }
 
-//Par guardar esa lista de favoritos en el local (y que no se borren los favoritos al recargar) hay que: 1) Checkear que la serie (el li) es un favorito o no. 2) Añadirle una clase para diferenciarlos del resto de series NO favoritas 
- function favouriteIsFavourite(eachData){
-  const favouriteFound= favourites.find((eachItem) =>{
-    
+//Par guardar esa lista de favoritos en el local (y que no se borren los favoritos al recargar) hay que: 1) Checkear que la serie (el li) es un favorito o no. 2) Añadirle una clase para diferenciarlos del resto de series NO favoritas
+function favouriteIsFavourite(eachData) {
+  const favouriteFound = favourites.find((eachItem) => {
     return eachItem.show.id === eachData.show.id;
-  })
- 
-  if (favouriteFound===undefined){
-    return false
-    
-  }else{
-    return true
-  }
- 
-}  
+  });
 
+  if (favouriteFound === undefined) {
+    return false;
+  } else {
+    return true;
+  }
+}
+function setInLocalStorage() {
+  const stringFavourites = JSON.stringify(favourites);
+  localStorage.setItem('favourites', stringFavourites);
+}
+//para no hacer peticion al servidor cada vez que cargue la pagina buscamos en el LocalStorage
+/* function getLocalStorage() {
+  const localStorageFavourites = localStorage.getItem('favourites');
+  // siempre que cojo datos del local storage tengo que comprobar si son válidos
+  // es decir si es la primera vez que entro en la página
+  if (localStorageFavourites === null) {
+    // no tengo datos en el local storage, así que llamo al API
+    handleClick();
+  } 
+  else {
+    // sí tengo datos en el local storage, así lo parseo a un array y
+    const arrayFavourites = JSON.parse(localStorageFavourites);
+  }
+  console.log(arrayFavourites)
+   // lo guardo en la variable global de favoritos
+   //favourites = arrayFavourites; 
+   // cada vez que modifico los arrays de palettes o de favorites vuelvo a pintar y a escuchar eventos
+   displayList();
+}
+getLocalStorage();
+
+ */
 searchButton.addEventListener('click', handleClick);
 formOfShows.addEventListener('submit', preventDefault);

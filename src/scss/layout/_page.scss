@@ -1,7 +1,7 @@
-.to-apply-all{
-    background: linear-gradient(to right, blue, pink);
+.to-apply-all {
+  background: linear-gradient(to right, blue, pink);
 }
-.alert{
+.alert {
   font-size: 20px;
   color: rgb(8, 8, 8);
   font-weight: bold;
@@ -10,6 +10,13 @@
   border: 4px solid rgb(15, 6, 138);
   border-style: dotted;
   max-width: fit-content;
+  &__VIPsection {
+    border: 4px solid rgb(240, 236, 35);
+    border-style: dashed;
+  }
+}
+.cover {
+  margin-top: 20px;
 }
 .container {
   width: 100vw;
@@ -48,21 +55,15 @@
       font-size: 1em;
       padding-top: 2px;
     }
-    
   }
-  &__output{display: flex;
+  &__output {
+    display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     max-width: 50vw;
-    
-
   }
-  
+
   &__main {
     height: 100vh;
-    
   }
- 
 }
-
-
