@@ -78,7 +78,6 @@ function handleEachSerie(event) {
     favourites.splice(favouriteIsInVipSection, 1);
   }
   setInLocalStorage();
-  console.log(favourites);
   addFavouritesInVipSection();
 }
 
@@ -150,6 +149,7 @@ function getLocalStorage() {
   if (localStorageFavourites === null) {
     // no tengo datos en el local storage, así que llamo al API
     favourites = [];
+
   } else {
     // sí tengo datos en el local storage, así lo parseo a un array y
     const arrayFavourites = JSON.parse(localStorageFavourites);
