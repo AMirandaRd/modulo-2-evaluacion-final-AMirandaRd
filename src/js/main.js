@@ -94,7 +94,7 @@ function addFavouritesInVipSection() {
     } else {
       vipClass = '';
     }
-    printVip += `<li class="js-listitem eachitemlist ${vipClass}" id="${eachItem.show.id}"> <button class="js-cornerbutton x-button">X</button>`;
+    printVip += `<li class="js-listitem eachitemlist ${vipClass}" id="${eachItem.show.id}"> `;
     printVip += `<h3>${eachItem.show.name}</h3>`;
     if (eachItem.show.image === null) {
       printVip += `<img src="./assets/images/defaultimage.png" class="cover" alt="${eachItem.show.name} cover image">`;
