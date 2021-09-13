@@ -21,7 +21,6 @@ function handleClick() {
         console.log(data);
         series = data;
         displayList();
-        setInLocalStorage();
       });
   }
 }
@@ -39,7 +38,7 @@ function displayList() {
       //si la serie que aparece en la lista no tiene imagen, se le pondrá una por defecto.
       printList += `<img src="./assets/images/defaultimage.png" class="" alt="${eachData.show.name} cover image">`;
     } else {
-      //si contiene una imagen, muestramela.
+     //si contiene una imagen, muestramela.
       printList += `<img src="${eachData.show.image.medium}" class="" alt="${eachData.show.name} cover image">`;
     }
     //printList += `<img src="${eachData.show.image.medium}" alt="${eachData.show.name} cover image">`;
@@ -78,12 +77,13 @@ function handleEachSerie(event) {
   const favouriteIsInVipSection = favourites.findIndex((eachItem) => {
     return eachItem.show.id === parseInt(myFavouriteShow);
   });
-  console.log(favouriteIsInVipSection);
+  //console.log(favouriteIsInVipSection);
   if (favouriteIsInVipSection === -1) {
     favourites.push(serieHighlighted);
   } else {
     favourites.splice(favouriteIsInVipSection, 1);
   }
+  setInLocalStorage();
   console.log(favourites);
   addFavouritesInVipSection();
 }
@@ -92,7 +92,7 @@ function handleEachSerie(event) {
 
 function addFavouritesInVipSection() {
   let vipClass = '';
-  let printVip = `<h2> Mis series favoritas </h2>`;
+  let printVip = `<h2> Mis series favoritas </h2> <button class="reset-button js-reset-button">Reset</button>`;
   for (const eachItem of favourites) {
     const isFavourite = favouriteIsFavourite(eachItem);
     if (isFavourite) {
@@ -112,7 +112,15 @@ function addFavouritesInVipSection() {
   }
   const favouritesSection = document.querySelector('.js-favouritesection');
   favouritesSection.innerHTML = printVip;
+  const removeFavouriteList=document.querySelector('.js-reset-button');
+removeFavouriteList.addEventListener('click', handleResetButton);
+
 }
+ function handleResetButton(){
+  favourites=[];
+setInLocalStorage();
+addFavouritesInVipSection();}
+
 
 //Par guardar esa lista de favoritos en el local (y que no se borren los favoritos al recargar) hay que: 1) Checkear que la serie (el li) es un favorito o no. 2) Añadirle una clase para diferenciarlos del resto de series NO favoritas
 function favouriteIsFavourite(eachData) {
@@ -131,26 +139,25 @@ function setInLocalStorage() {
   localStorage.setItem('favourites', stringFavourites);
 }
 //para no hacer peticion al servidor cada vez que cargue la pagina buscamos en el LocalStorage
-/* function getLocalStorage() {
+ function getLocalStorage() {
   const localStorageFavourites = localStorage.getItem('favourites');
   // siempre que cojo datos del local storage tengo que comprobar si son válidos
   // es decir si es la primera vez que entro en la página
   if (localStorageFavourites === null) {
     // no tengo datos en el local storage, así que llamo al API
-    handleClick();
+    favourites=[];
   } 
   else {
     // sí tengo datos en el local storage, así lo parseo a un array y
     const arrayFavourites = JSON.parse(localStorageFavourites);
-  }
-  console.log(arrayFavourites)
    // lo guardo en la variable global de favoritos
-   //favourites = arrayFavourites; 
+   favourites = arrayFavourites; 
+   addFavouritesInVipSection()
+  }
    // cada vez que modifico los arrays de palettes o de favorites vuelvo a pintar y a escuchar eventos
-   displayList();
+  
 }
-getLocalStorage();
 
- */
+getLocalStorage();
 searchButton.addEventListener('click', handleClick);
 formOfShows.addEventListener('submit', preventDefault);
