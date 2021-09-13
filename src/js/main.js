@@ -38,10 +38,10 @@ function displayList() {
       //si la serie que aparece en la lista no tiene imagen, se le pondrá una por defecto.
       printList += `<img src="./assets/images/defaultimage.png" class="" alt="${eachData.show.name} cover image">`;
     } else {
-     //si contiene una imagen, muestramela.
+      //si contiene una imagen, muestramela.
       printList += `<img src="${eachData.show.image.medium}" class="" alt="${eachData.show.name} cover image">`;
     }
-    //printList += `<img src="${eachData.show.image.medium}" alt="${eachData.show.name} cover image">`;
+
     printList += `</li>`;
   }
   listOfShows.innerHTML = printList;
@@ -53,7 +53,6 @@ function displayList() {
 function handleListItem() {
   const showsList = document.querySelectorAll('.js-listitem');
   for (const showsListElement of showsList) {
-    //console.log(showsListElement);
     showsListElement.addEventListener('click', handleEachSerie);
   }
 }
@@ -69,11 +68,6 @@ function handleEachSerie(event) {
   //creamos un nuevo array donde meteremos los favoritos(la ponemos como global)
   //NOTA SUPER IMPORTANTE: .find devuelve el primer objeto que encuentra que cumpla esa condición (en este caso que el id sea igual al id del elemento clickado)el id al ser unico, no tiene que seguir buscando tras encontrar el primero.(serie.show.id===parseInt(myFavouriteShow, que contiene el valor del elemento clickado))
 
-  //console.log(myFavouriteShow) <----nos devuelve el id del objeto clickado
-
-  //console.log(serieHighlighted)  <-----nos devuelve el objeto clickado
-
-  //
   const favouriteIsInVipSection = favourites.findIndex((eachItem) => {
     return eachItem.show.id === parseInt(myFavouriteShow);
   });
@@ -100,7 +94,7 @@ function addFavouritesInVipSection() {
     } else {
       vipClass = '';
     }
-    printVip += `<li class="js-listitem eachitemlist ${vipClass}" id="${eachItem.show.id}">`;
+    printVip += `<li class="js-listitem eachitemlist ${vipClass}" id="${eachItem.show.id}"> <button class="js-cornerbutton x-button">X</button>`;
     printVip += `<h3>${eachItem.show.name}</h3>`;
     if (eachItem.show.image === null) {
       printVip += `<img src="./assets/images/defaultimage.png" class="cover" alt="${eachItem.show.name} cover image">`;
@@ -112,15 +106,25 @@ function addFavouritesInVipSection() {
   }
   const favouritesSection = document.querySelector('.js-favouritesection');
   favouritesSection.innerHTML = printVip;
-  const removeFavouriteList=document.querySelector('.js-reset-button');
-removeFavouriteList.addEventListener('click', handleResetButton);
-
+  const removeFavouriteList = document.querySelector('.js-reset-button');
+  removeFavouriteList.addEventListener('click', handleResetButton);
+  /* const cornerButtons=document.querySelectorAll('.js-cornerbutton');
+  for (const eachcornerButton of cornerButtons){
+    cornerButtons.addEventListener('click', handleRemoveOne); */
+  //}
 }
- function handleResetButton(){
-  favourites=[];
-setInLocalStorage();
-addFavouritesInVipSection();}
+function handleResetButton() {
+  favourites = [];
+  setInLocalStorage();
+  addFavouritesInVipSection();
+}
 
+/* function handleRemoveOne(){
+  const crossClicked=Ev.currentTraget.parentNode.id;
+  const removingFav = favorites.findIndex((fav) => {
+    return eachItem.show.id === crossClicked;
+  }); */
+//}
 
 //Par guardar esa lista de favoritos en el local (y que no se borren los favoritos al recargar) hay que: 1) Checkear que la serie (el li) es un favorito o no. 2) Añadirle una clase para diferenciarlos del resto de series NO favoritas
 function favouriteIsFavourite(eachData) {
@@ -139,23 +143,21 @@ function setInLocalStorage() {
   localStorage.setItem('favourites', stringFavourites);
 }
 //para no hacer peticion al servidor cada vez que cargue la pagina buscamos en el LocalStorage
- function getLocalStorage() {
+function getLocalStorage() {
   const localStorageFavourites = localStorage.getItem('favourites');
   // siempre que cojo datos del local storage tengo que comprobar si son válidos
   // es decir si es la primera vez que entro en la página
   if (localStorageFavourites === null) {
     // no tengo datos en el local storage, así que llamo al API
-    favourites=[];
-  } 
-  else {
+    favourites = [];
+  } else {
     // sí tengo datos en el local storage, así lo parseo a un array y
     const arrayFavourites = JSON.parse(localStorageFavourites);
-   // lo guardo en la variable global de favoritos
-   favourites = arrayFavourites; 
-   addFavouritesInVipSection()
+    // lo guardo en la variable global de favoritos
+    favourites = arrayFavourites;
+    addFavouritesInVipSection();
   }
-   // cada vez que modifico los arrays de palettes o de favorites vuelvo a pintar y a escuchar eventos
-  
+  // cada vez que modifico los arrays de palettes o de favorites vuelvo a pintar y a escuchar eventos
 }
 
 getLocalStorage();
