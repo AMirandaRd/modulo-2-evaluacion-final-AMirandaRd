@@ -4,6 +4,11 @@ const inputUser = document.querySelector('.js-input');
 const searchButton = document.querySelector('.js-button');
 const listOfShows = document.querySelector('.js-result');
 const formOfShows = document.querySelector('.js-form');
+const logButton=document.querySelector('.js-logbutton');
+
+
+
+
 let series = [];
 let favourites = [];
 function preventDefault(event) {
@@ -33,7 +38,11 @@ function displayList() {
   for (const eachData of series) {
     printList += `<li class="js-listitem eachitemlist" id="${eachData.show.id}">`;
     printList += `<h3>${eachData.show.name}</h3>`;
-
+    if (eachData.show.schedule.time === ''){
+       printList+= `<p>Sin especificar</p>`
+    }else{ 
+    printList +=`<p>${eachData.show.schedule.time}</p>`
+    }
     if (eachData.show.image === null) {
       //si la serie que aparece en la lista no tiene imagen, se le pondrá una por defecto.
       printList += `<img src="./assets/images/defaultimage.png" class="" alt="${eachData.show.name} cover image">`;
@@ -48,6 +57,12 @@ function displayList() {
   //llamamos al siguiente paso
   handleListItem();
 }
+function handleLog(){
+  for (const serie of series){
+  console.log (`${serie.show.name}`)}
+}
+
+logButton.addEventListener('click', handleLog);
 
 //Identificamos cada item clickado
 function handleListItem() {
