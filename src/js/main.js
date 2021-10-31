@@ -5,7 +5,7 @@ const searchButton = document.querySelector('.js-button');
 const listOfShows = document.querySelector('.js-result');
 const formOfShows = document.querySelector('.js-form');
 const logButton=document.querySelector('.js-logbutton');
-
+const favouritesSection = document.querySelector('.js-favouritesection');
 
 
 
@@ -57,12 +57,7 @@ function displayList() {
   //llamamos al siguiente paso
   handleListItem();
 }
-function handleLog(){
-  for (const serie of series){
-  console.log (`${serie.show.name}`)}
-}
 
-logButton.addEventListener('click', handleLog);
 
 //Identificamos cada item clickado
 function handleListItem() {
@@ -75,7 +70,6 @@ function handleListItem() {
 
 function handleEachSerie(event) {
   const selectedShow = event.currentTarget;
-  selectedShow.classList.toggle('colorVIP');
   const myFavouriteShow = event.currentTarget.id;
   const serieHighlighted = series.find((eachData) => {
     return eachData.show.id === parseInt(myFavouriteShow);
@@ -99,6 +93,13 @@ function handleEachSerie(event) {
 //Ahora vamos a pintar las series favoritas en otra sección
 
 function addFavouritesInVipSection() {
+  if( favourites.length !== 0 ) {
+    favouritesSection.classList.remove('hidden');
+  }
+  else {
+    favouritesSection.classList.add('hidden');
+  }
+
   let vipClass = '';
   let printVip = `<h2> Mis series favoritas </h2> <button class="reset-button js-reset-button">Reset</button>`;
   for (const eachItem of favourites) {
@@ -118,7 +119,7 @@ function addFavouritesInVipSection() {
     printVip += `</li>`;
     favouriteIsFavourite(eachItem);
   }
-  const favouritesSection = document.querySelector('.js-favouritesection');
+  
   favouritesSection.innerHTML = printVip;
   const removeFavouriteList = document.querySelector('.js-reset-button');
   removeFavouriteList.addEventListener('click', handleResetButton);
@@ -164,8 +165,15 @@ function getLocalStorage() {
   if (localStorageFavourites === null) {
     // no tengo datos en el local storage, así que llamo al API
     favourites = [];
+  favouritesSection.classList.add('hidden');
+    
 
-  } else {
+
+  } else if( localStorageFavourites === '[]' ) {
+    favourites = [];
+  favouritesSection.classList.add('hidden');
+  }
+  else {
     // sí tengo datos en el local storage, así lo parseo a un array y
     const arrayFavourites = JSON.parse(localStorageFavourites);
     // lo guardo en la variable global de favoritos
